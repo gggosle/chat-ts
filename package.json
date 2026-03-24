@@ -1,0 +1,27 @@
+{
+  "name": "chat-",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "homepage": "https://github.com/gggosle/chat-ts#readme",
+  "bugs": {
+    "url": "https://github.com/gggosle/chat-ts/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gggosle/chat-ts.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "typescript": "^6.0.2",
+    "vite": "^8.0.2"
+  }
+}
