@@ -26,6 +26,15 @@ function createMessageElement(msg: ChatMessage): HTMLDivElement {
             div.innerHTML = `<span style="color: red;">⚠ Error ${msg.code}: ${msg.reason}</span>`;
             break;
 
+        case 'command':
+            div.innerHTML = `<strong>${msg.sender}:</strong> ${msg.command}`;
+            if (msg.sender === 'Me') div.classList.add('message-mine', 'message-mine__command');
+            break;
+
+        case 'notification':
+            div.innerHTML = `<span style="color: green;"> ${msg.title}: <br> ${msg.content}</span>`;
+            break;
+
         default:
             return msg;
     }
@@ -55,6 +64,12 @@ server.on('user:typing', ({ user, isTyping }) => {
 server.on('status:change', ({ status }) => {
     console.log(`[Network] Server is currently: ${status}`);
 });
+
+server.on('command:action', ({ action }) => {
+    if (action === 'clear') {
+        messagesContainer.innerHTML = '';
+    }
+})
 
 chatForm.addEventListener('submit', (e) => {
     e.preventDefault();

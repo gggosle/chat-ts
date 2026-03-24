@@ -71,6 +71,11 @@ export class FakeServer extends EventEmitter<ServerEvents> {
     }
 
     sendMessage(text: string): void {
+        if (text.startsWith('/')) {
+            this.#handleCommand(text);
+            return;
+        }
+
         this.emit('message:receive', {
             id: crypto.randomUUID(),
             timestamp: Date.now(),
@@ -96,6 +101,46 @@ export class FakeServer extends EventEmitter<ServerEvents> {
 
         }, 500);
     }
+
+    #handleCommand(rawText: string): void {
+        const parts = rawText.slice(1).split(' ');
+        const command = parts[0].toLowerCase();
+
+        this.emit('message:receive', {
+            id: crypto.randomUUID(),
+            timestamp: Date.now(),
+            type: 'command',
+            command: command,
+            sender: 'Me',
+        });
+
+        switch (command) {
+            case 'clear':
+                this.emit('command:action', { action: 'clear' });
+                break;
+
+            case 'help':
+                this.emit('message:receive', {
+                    id: crypto.randomUUID(),
+                    timestamp: Date.now(),
+                    type: 'notification',
+                    title: 'Available Commands',
+                    content: [
+                        '/help - Show this message',
+                        '/clear - Clear the chat history',
+                    ]
+                });
+                break;
+
+            default:
+                this.emit('message:receive', {
+                    id: crypto.randomUUID(),
+                    timestamp: Date.now(),
+                    type: 'error',
+                    code: 404,
+                    reason: `Unknown command: /${command}`
+                });
+        }}
 
     #getRandomBotName(): string {
         return this.botNames[Math.floor(Math.random() * this.botNames.length)];
